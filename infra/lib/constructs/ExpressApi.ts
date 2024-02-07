@@ -4,49 +4,17 @@ import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as log from 'aws-cdk-lib/aws-logs';
-import * as ssm from 'aws-cdk-lib/aws-ssm';
 
 import { Construct } from 'constructs';
 
-import { appName } from './vars';
+import { appName } from '../vars';
 
-export class BackendStack extends cdk.Stack {
-	constructor(scope: Construct, id: string, props?: cdk.StackProps) {
-		super(scope, id, props);
-
-		const vpc = new ec2.Vpc(this, 'VPC', {
-			vpcName: `${appName}-vpc`,
-			maxAzs: 2,
-			natGateways: 0,
-			ipProtocol: ec2.IpProtocol.IPV4_ONLY,
-			subnetConfiguration: [
-				{
-					cidrMask: 24,
-					name: `${appName}-public-subnet`,
-					subnetType: ec2.SubnetType.PUBLIC,
-				},
-				{
-					cidrMask: 24,
-					name: `${appName}-private-subnet`,
-					subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
-				},
-			],
-		});
-
-		new ssm.StringParameter(this, 'VpcIdParameter', {
-			parameterName: `/${appName}/VpcId`,
-			stringValue: vpc.vpcId,
-		});
-
-		new ssm.StringParameter(this, 'PublicSubnetIdParameter', {
-			parameterName: `/${appName}/PublicSubnetId`,
-			stringValue: vpc.publicSubnets[0].subnetId,
-		});
-
-		new ssm.StringParameter(this, 'PrivateSubnetIdParameter', {
-			parameterName: `/${appName}/PrivateSubnetId`,
-			stringValue: vpc.privateSubnets[0].subnetId,
-		});
+interface ExpressApiProps {
+	vpc: ec2.Vpc;
+}
+export class ExpressApi extends cdk.Stack {
+	constructor(scope: Construct, id: string, props: ExpressApiProps) {
+		super(scope, id);
 
 		const lambdaRole = new iam.Role(this, 'lambdaRole', {
 			assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
@@ -76,7 +44,7 @@ export class BackendStack extends cdk.Stack {
 			code: lambda.Code.fromAsset('lambda'),
 			role: lambdaRole,
 			timeout: cdk.Duration.seconds(30),
-			vpc,
+			vpc: props.vpc,
 			vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
 			logGroup: lambdaLogGroup,
 			systemLogLevel: lambda.SystemLogLevel.INFO,
