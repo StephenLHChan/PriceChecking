@@ -1,0 +1,27 @@
+{
+	"name": "pricechecking",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"lint": "npx eslint --fix ."
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/StephenLHChan/PriceChecking.git"
+	},
+	"author": "Stephen LH Chan",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/StephenLHChan/PriceChecking/issues"
+	},
+	"homepage": "https://github.com/StephenLHChan/PriceChecking#readme",
+	"devDependencies": {
+		"@types/node": "^20.11.16",
+		"@typescript-eslint/eslint-plugin": "^6.21.0",
+		"eslint": "^8.56.0",
+		"eslint-config-airbnb": "^19.0.4",
+		"eslint-plugin-import": "^2.29.1",
+		"typescript": "^5.3.3"
+	}
+}

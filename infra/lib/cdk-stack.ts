@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 
 import { ExpressApi } from './constructs/ExpressApi';
-import { Vpc } from './constructs/vpc';
+import { Vpc } from './constructs/Vpc';
 
 import { Construct } from 'constructs';
 
