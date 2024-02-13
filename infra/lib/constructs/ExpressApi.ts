@@ -8,6 +8,7 @@ import {
 } from 'aws-cdk-lib/aws-apigatewayv2';
 import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
 
+import { ITable } from 'aws-cdk-lib/aws-dynamodb';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
@@ -20,6 +21,7 @@ import { appName } from '../vars';
 
 interface ExpressApiProps {
 	vpc: ec2.Vpc;
+	userTable: ITable;
 }
 
 export class ExpressApi extends cdk.Stack {
@@ -36,6 +38,26 @@ export class ExpressApi extends cdk.Stack {
 			iam.ManagedPolicy.fromAwsManagedPolicyName(
 				'AWSLambdaVPCAccessExecutionRole'
 			)
+		);
+
+		lambdaRole.addToPolicy(
+			new iam.PolicyStatement({
+				effect: iam.Effect.ALLOW,
+				actions: [
+					'dynamodb:BatchGetItem',
+					'dynamodb:BatchWriteItem',
+					'dynamodb:DeleteItem',
+					'dynamodb:GetItem',
+					'dynamodb:PutItem',
+					'dynamodb:Query',
+					'dynamodb:Scan',
+					'dynamodb:UpdateItem',
+				],
+				resources: [
+					props.userTable.tableArn,
+					cdk.Fn.join('', [props.userTable.tableArn, '/index/*']),
+				],
+			})
 		);
 
 		const lambdaLogGroup = new log.LogGroup(
@@ -56,6 +78,9 @@ export class ExpressApi extends cdk.Stack {
 				handler: 'index.handler',
 				role: lambdaRole,
 				timeout: cdk.Duration.seconds(30),
+				environment: {
+					USER_TABLE: props.userTable.tableName,
+				},
 				vpc: props.vpc,
 				vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
 				logGroup: lambdaLogGroup,
