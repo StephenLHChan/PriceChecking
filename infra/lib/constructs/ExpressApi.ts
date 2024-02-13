@@ -24,7 +24,7 @@ interface ExpressApiProps {
 	userTable: ITable;
 }
 
-export class ExpressApi extends cdk.Stack {
+export class ExpressApi extends Construct {
 	constructor(scope: Construct, id: string, props: ExpressApiProps) {
 		super(scope, id);
 
