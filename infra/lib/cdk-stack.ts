@@ -4,9 +4,7 @@ import { ExpressApi } from './constructs/ExpressApi';
 import { Vpc } from './constructs/Vpc';
 
 import { Construct } from 'constructs';
-import UserTable from './constructs/tables/UserTable';
-import ProductTable from './constructs/tables/ProductTable';
-import PriceTable from './constructs/tables/PriceTable';
+import { UserTable, PriceTable, ProductTable } from './constructs/tables';
 
 export class PriceCheckStack extends cdk.Stack {
 	constructor(scope: Construct, id: string, props?: cdk.StackProps) {
