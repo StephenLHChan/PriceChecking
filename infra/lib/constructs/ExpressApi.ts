@@ -23,6 +23,7 @@ interface ExpressApiProps {
 	vpc: ec2.Vpc;
 	userTable: ITable;
 	productTable: ITable;
+	priceTable: ITable;
 }
 
 export class ExpressApi extends Construct {
@@ -59,6 +60,8 @@ export class ExpressApi extends Construct {
 					cdk.Fn.join('', [props.userTable.tableArn, '/index/*']),
 					props.productTable.tableArn,
 					cdk.Fn.join('', [props.productTable.tableArn, '/index/*']),
+					props.priceTable.tableArn,
+					cdk.Fn.join('', [props.priceTable.tableArn, '/index/*']),
 				],
 			})
 		);
@@ -84,6 +87,7 @@ export class ExpressApi extends Construct {
 				environment: {
 					USER_TABLE: props.userTable.tableName,
 					PRODUCT_TABLE: props.productTable.tableName,
+					PRICE_TABLE: props.priceTable.tableName,
 				},
 				vpc: props.vpc,
 				vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
