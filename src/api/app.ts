@@ -7,7 +7,7 @@ import {
 	UnauthenticatedError,
 	UserInputError,
 } from 'errors';
-import { log } from 'utils/loggers';
+import { log } from 'utils/logger';
 
 const app = express();
 const router = Router();
