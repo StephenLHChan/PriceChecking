@@ -9,8 +9,11 @@
   "author": "Stephen LH Chan",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/credential-providers": "^3.515.0",
+    "@aws-sdk/lib-dynamodb": "^3.515.0",
     "@codegenie/serverless-express": "^4.13.0",
     "cors": "^2.8.5",
+    "dynamodb-toolbox": "^0.9.2",
     "express": "^4.18.2",
     "http-status-codes": "^2.3.0",
     "ulidx": "^2.3.0",
